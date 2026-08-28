@@ -1,7 +1,7 @@
 Parametre vs argument
 
-Signature
+Signature d'une fonction
 
-ctrl + a-k-f
+ctrl + a-k-f pour mettre correctement le texte.
 
 Expression vs Condition
