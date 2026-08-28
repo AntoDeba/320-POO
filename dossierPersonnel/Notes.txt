@@ -1,0 +1,7 @@
+Parametre vs argument
+
+Signature
+
+ctrl + a-k-f
+
+Expression vs Condition
