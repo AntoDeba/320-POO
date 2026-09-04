@@ -15,42 +15,39 @@ namespace Drone
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
-            int posX = 0;
-            int posY = 10;
-            int battery = 50;
-            while (battery >= 0)
+
+            Drone[] droneArray = new Drone[] {
+                new Drone(0, 2, 20),
+                new Drone(0, 4, 30),
+                new Drone(0, 6, 50),
+                new Drone(0, 8, 60),
+                new Drone(0, 10, 70),
+                new Drone(0, 12, 80)
+            };
+
+            while (isOneAlive(droneArray))
             {
                 Console.Clear();
-                drawDrone(posX, posY, battery);
-                drawDrone(posX, posY - 3, battery);
-                drawDrone(posX, posY - 6, battery);
-                changeState(ref posX, ref battery);
+                foreach (Drone drone in droneArray)
+                {
+                    drone.changeState();
+                    drone.drawDrone();
+                }
                 Thread.Sleep(100);
             }
             Console.ReadKey();
         }
 
-        static void drawDrone(int posX, int posY, int battery)
+        static bool isOneAlive(Drone[] droneArray)
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.SetCursorPosition(posX, posY);
-            if (battery > 0)
-                Console.Write("x-0-x");
-            else
-                Console.Write("_____");
-
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.SetCursorPosition(posX, posY - 1);
-
-            if (battery > 0)
-                Console.Write(battery + "%");
-            else
-                Console.Write("Drone appears to be suffering from lack of electrical input");
-        }
-        static void changeState(ref int posX, ref int battery)
-        {
-            posX += 1;
-            battery -= 2;
+            foreach (Drone drone in droneArray)
+            {
+                if(drone.Battery > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

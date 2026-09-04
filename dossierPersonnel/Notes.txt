@@ -5,3 +5,5 @@ Signature d'une fonction
 ctrl + a-k-f pour mettre correctement le texte.
 
 Expression vs Condition
+
+Refactorisation : Modifier le code en gardant un comportement identique.
