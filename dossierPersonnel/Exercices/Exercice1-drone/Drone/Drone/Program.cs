@@ -17,12 +17,9 @@ namespace Drone
             Console.CursorVisible = false;
 
             Drone[] droneArray = new Drone[] {
-                new Drone(0, 2, 20),
-                new Drone(0, 4, 30),
-                new Drone(0, 6, 50),
-                new Drone(0, 8, 60),
-                new Drone(0, 10, 70),
-                new Drone(0, 12, 80)
+                new Drone("jean",0, 2, 20),
+                new Drone("jeanette",0, 6, 30),
+                new Drone("alex",0, 12, 10)
             };
 
             while (isOneAlive(droneArray))
