@@ -10,14 +10,21 @@ namespace Drones
         private string name;                           // Un nom
         private int x;                                 // Position en X depuis la gauche de l'espace aérien
         private int y;                                 // Position en Y depuis le haut de l'espace aérien
+        private int OriginX;
+        private int OriginY;
+        private int ObjX;
+        private int ObjY;
+        private int completionPercentage = 101;
 
         // Constructeur
         public Drone(string name)
         {
             this.x = Config.AIRSPACE_WIDTH / 2;
             this.y = Config.AIRSPACE_HEIGHT / 2;
+            OriginX = x;
+            OriginY = y;
             this.name = name;
-            charge = randomValuesHelper.alea.Next(Config.MAX_LOAD); // La charge initiale de la batterie est choisie aléatoirement
+            charge = randomValuesHelper.Alea.Next(Config.MAX_LOAD); // La charge initiale de la batterie est choisie aléatoirement
         }
 
         #region ================ Modelisation du drone et de son comportement ================
@@ -27,9 +34,21 @@ namespace Drones
         public void Update(int interval)
         {
             if (charge <= 0) return;                     // S'il n'a plus de charge, il ne peut plus bouger
-            Random alea = new Random();
-            x += 2;                                    // Il s'est déplacé de 2 pixels vers la droite
-            y += alea.Next(-2, 3);                     // Il s'est déplacé d'une valeur aléatoire vers le haut ou le bas
+            if(completionPercentage >= 100)
+            {
+                completionPercentage = 0;
+                ObjX = randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH-200);
+                ObjY = randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT-200);
+                OriginX = x;
+                OriginY = y;
+            }
+            else
+            {
+                completionPercentage += 10;
+                x = OriginX + ((ObjX - OriginX) * completionPercentage / 100);
+                y = OriginY + ((ObjY - OriginY) * completionPercentage / 100);
+            }
+
             charge--;                                  // Il a dépensé de l'énergie
         }
 

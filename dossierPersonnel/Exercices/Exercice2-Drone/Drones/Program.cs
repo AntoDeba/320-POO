@@ -18,6 +18,7 @@ namespace Drones
             // Création de la flotte de drones
             List<Drone> fleet= new List<Drone>();
             fleet.Add(new Drone("Joe"));
+            fleet.Add(new Drone("Jornaldo"));
 
             // Démarrage
             Application.Run(new AirSpace(fleet));
