@@ -6,19 +6,18 @@ namespace Drones
     // Cette partie de la classe Drone définit ce qu'est un drone par un modèle numérique
     public partial class Drone
     {
-        public int charge;                            // La charge actuelle de la batterie
-        public string name;                           // Un nom
-        public int x;                                 // Position en X depuis la gauche de l'espace aérien
-        public int y;                                 // Position en Y depuis le haut de l'espace aérien
+        private int charge;                            // La charge actuelle de la batterie
+        private string name;                           // Un nom
+        private int x;                                 // Position en X depuis la gauche de l'espace aérien
+        private int y;                                 // Position en Y depuis le haut de l'espace aérien
 
         // Constructeur
-        public Drone(int x, int y, string name)
+        public Drone(string name)
         {
-            Random alea = new Random();
-            this.x = x;
-            this.y = y;
+            this.x = Config.AIRSPACE_WIDTH / 2;
+            this.y = Config.AIRSPACE_HEIGHT / 2;
             this.name = name;
-            charge = alea.Next(1000); // La charge initiale de la batterie est choisie aléatoirement
+            charge = randomValuesHelper.alea.Next(Config.MAX_LOAD); // La charge initiale de la batterie est choisie aléatoirement
         }
 
         #region ================ Modelisation du drone et de son comportement ================

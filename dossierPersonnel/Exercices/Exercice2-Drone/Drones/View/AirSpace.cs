@@ -6,8 +6,6 @@ namespace Drones
 
     public partial class AirSpace : Form
     {
-        public static readonly int WIDTH = 1200;        // Dimensions of the airspace
-        public static readonly int HEIGHT = 600;
 
         // La flotte est l'ensemble des drones qui évoluent dans notre espace aérien
         private List<Drone> fleet;
