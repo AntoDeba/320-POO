@@ -22,7 +22,6 @@ namespace Drone
                 new Drone("alex",0, 12, 10)
             };
 
-            int count = 0;
             while (isOneAlive(drones))
             {
                 Console.Clear();
