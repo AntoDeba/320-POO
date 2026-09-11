@@ -16,16 +16,17 @@ namespace Drone
         {
             Console.CursorVisible = false;
 
-            Drone[] droneArray = new Drone[] {
+            List<Drone> drones = new List<Drone> {
                 new Drone("jean",0, 2, 20),
                 new Drone("jeanette",0, 6, 30),
                 new Drone("alex",0, 12, 10)
             };
 
-            while (isOneAlive(droneArray))
+            int count = 0;
+            while (isOneAlive(drones))
             {
                 Console.Clear();
-                foreach (Drone drone in droneArray)
+                foreach (Drone drone in drones)
                 {
                     drone.changeState();
                     drone.drawDrone();
@@ -35,9 +36,9 @@ namespace Drone
             Console.ReadKey();
         }
 
-        static bool isOneAlive(Drone[] droneArray)
+        static bool isOneAlive(List<Drone> drones)
         {
-            foreach (Drone drone in droneArray)
+            foreach (Drone drone in drones)
             {
                 if(drone.Battery > 0)
                 {
