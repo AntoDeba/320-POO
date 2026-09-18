@@ -40,12 +40,15 @@ namespace Drones
             if (_charge <= 0) return;                     // S'il n'a plus de charge, il ne peut plus bouger
             if(_completionIndex >= 1) //se déclanche quand le drone est arrivé à destination
             {
-                _completionIndex = 0;
-                _ObjX = randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH-200);
-                _ObjY = randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT-200);
-                _OriginX = _x;
-                _OriginY = _y;
-                _distance = mathHelper.distance(_OriginX, _OriginY, _ObjX, _ObjY);
+                if(_state == State.ROAMING)
+                {
+                    _completionIndex = 0;
+                    _ObjX = randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH - 200);
+                    _ObjY = randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT - 200);
+                    _OriginX = _x;
+                    _OriginY = _y;
+                    _distance = mathHelper.distance(_OriginX, _OriginY, _ObjX, _ObjY);
+                }
             }
             else
             {

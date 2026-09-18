@@ -1,4 +1,5 @@
 using Drones.Helpers;
+using Drones.Model;
 
 namespace Drones
 {
@@ -18,8 +19,12 @@ namespace Drones
             // Création de la flotte de drones
             List<Drone> fleet= new List<Drone>();
             fleet.Add(new Drone("Joe"));
+            fleet.Add(new Drone("Joe"));
+            fleet.Add(new Drone("Joe"));
+            Charger charger = new Charger(100, 100);
+
             // Démarrage
-            Application.Run(new AirSpace(fleet));
+            Application.Run(new AirSpace(fleet, charger));
         }
     }
 }
