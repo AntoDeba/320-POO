@@ -6,26 +6,29 @@ namespace Drones
     // Cette partie de la classe Drone définit ce qu'est un drone par un modèle numérique
     public partial class Drone
     {
-        private double charge;                            // La charge actuelle de la batterie
+        private double _charge;                            // La charge actuelle de la batterie
         private string name;                           // Un nom
-        private double x;                                 // Position en X depuis la gauche de l'espace aérien
-        private double y;                                 // Position en Y depuis le haut de l'espace aérien
-        private double OriginX;
-        private double OriginY;
-        private double ObjX;
-        private double ObjY;
-        private double completionIndex = 1;
-        private double distance;
+        private double _x;                                 // Position en X depuis la gauche de l'espace aérien
+        private double _y;                                 // Position en Y depuis le haut de l'espace aérien
+        private double _OriginX;
+        private double _OriginY;
+        private double _ObjX;
+        private double _ObjY;
+        private double _completionIndex = 1;
+        private double _distance;
+        private State _state = State.ROAMING;
+
+        public enum State { CRASH, LOW_BATTERY, LOADING, ROAMING };
 
         // Constructeur
         public Drone(string name)
         {
-            this.x = Config.AIRSPACE_WIDTH / 2;
-            this.y = Config.AIRSPACE_HEIGHT / 2;
-            OriginX = x;
-            OriginY = y;
+            this._x = Config.AIRSPACE_WIDTH / 2;
+            this._y = Config.AIRSPACE_HEIGHT / 2;
+            _OriginX = _x;
+            _OriginY = _y;
             this.name = name;
-            charge = randomValuesHelper.Alea.Next(Config.MAX_LOAD); // La charge initiale de la batterie est choisie aléatoirement
+            _charge = randomValuesHelper.Alea.Next(Config.MAX_LOAD); // La charge initiale de la batterie est choisie aléatoirement
         }
 
         #region ================ Modelisation du drone et de son comportement ================
@@ -34,24 +37,24 @@ namespace Drones
         // que 'interval' millisecondes se sont écoulées
         public void Update(int interval)
         {
-            if (charge <= 0) return;                     // S'il n'a plus de charge, il ne peut plus bouger
-            if(completionIndex >= 1) //se déclanche quand le drone est arrivé à destination
+            if (_charge <= 0) return;                     // S'il n'a plus de charge, il ne peut plus bouger
+            if(_completionIndex >= 1) //se déclanche quand le drone est arrivé à destination
             {
-                completionIndex = 0;
-                ObjX = randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH-200);
-                ObjY = randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT-200);
-                OriginX = x;
-                OriginY = y;
-                distance = mathHelper.distance(OriginX, OriginY, ObjX, ObjY);
+                _completionIndex = 0;
+                _ObjX = randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH-200);
+                _ObjY = randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT-200);
+                _OriginX = _x;
+                _OriginY = _y;
+                _distance = mathHelper.distance(_OriginX, _OriginY, _ObjX, _ObjY);
             }
             else
             {
-                completionIndex += Config.SPEED/distance;
-                x = OriginX + ((ObjX - OriginX) * completionIndex);
-                y = OriginY + ((ObjY - OriginY) * completionIndex);
+                _completionIndex += Config.SPEED/_distance;
+                _x = _OriginX + ((_ObjX - _OriginX) * _completionIndex);
+                _y = _OriginY + ((_ObjY - _OriginY) * _completionIndex);
             }
 
-            charge--;                                  // Il a dépensé de l'énergie
+            _charge--;                                  // Il a dépensé de l'énergie
         }
 
         #endregion
@@ -64,14 +67,14 @@ namespace Drones
         // De manière graphique
         public void Render(BufferedGraphics drawingSpace)
         {
-            drawingSpace.Graphics.DrawImage(charge > 0 ? Resources.drone : Resources.boom, Convert.ToSingle(x- Drone.SIZE /2), Convert.ToSingle(y - Drone.SIZE / 2), Drone.SIZE, Drone.SIZE);
-            drawingSpace.Graphics.DrawString($"{this}", TextHelpers.drawFont, TextHelpers.writingBrush, Convert.ToSingle(x + 5), Convert.ToSingle( y - 25));
+            drawingSpace.Graphics.DrawImage(_charge > 0 ? Resources.drone : Resources.boom, Convert.ToSingle(_x- Drone.SIZE /2), Convert.ToSingle(_y - Drone.SIZE / 2), Drone.SIZE, Drone.SIZE);
+            drawingSpace.Graphics.DrawString($"{this}", TextHelpers.drawFont, TextHelpers.writingBrush, Convert.ToSingle(_x + 5), Convert.ToSingle( _y - 25));
         }
 
         // De manière textuelle
         public override string ToString()
         {
-            return $"{name} ({((int)((double)charge / 1000 * 100)).ToString()}%)";
+            return $"{name} ({((int)((double)_charge / 1000 * 100)).ToString()}%)";
         }
         #endregion
 
