@@ -6,15 +6,16 @@ namespace Drones
     // Cette partie de la classe Drone définit ce qu'est un drone par un modèle numérique
     public partial class Drone
     {
-        private int charge;                            // La charge actuelle de la batterie
+        private double charge;                            // La charge actuelle de la batterie
         private string name;                           // Un nom
-        private int x;                                 // Position en X depuis la gauche de l'espace aérien
-        private int y;                                 // Position en Y depuis le haut de l'espace aérien
-        private int OriginX;
-        private int OriginY;
-        private int ObjX;
-        private int ObjY;
-        private int completionPercentage = 101;
+        private double x;                                 // Position en X depuis la gauche de l'espace aérien
+        private double y;                                 // Position en Y depuis le haut de l'espace aérien
+        private double OriginX;
+        private double OriginY;
+        private double ObjX;
+        private double ObjY;
+        private double completionIndex = 1;
+        private double distance;
 
         // Constructeur
         public Drone(string name)
@@ -34,19 +35,20 @@ namespace Drones
         public void Update(int interval)
         {
             if (charge <= 0) return;                     // S'il n'a plus de charge, il ne peut plus bouger
-            if(completionPercentage >= 100)
+            if(completionIndex >= 1) //se déclanche quand le drone est arrivé à destination
             {
-                completionPercentage = 0;
+                completionIndex = 0;
                 ObjX = randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH-200);
                 ObjY = randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT-200);
                 OriginX = x;
                 OriginY = y;
+                distance = mathHelper.distance(OriginX, OriginY, ObjX, ObjY);
             }
             else
             {
-                completionPercentage += 10;
-                x = OriginX + ((ObjX - OriginX) * completionPercentage / 100);
-                y = OriginY + ((ObjY - OriginY) * completionPercentage / 100);
+                completionIndex += Config.SPEED/distance;
+                x = OriginX + ((ObjX - OriginX) * completionIndex);
+                y = OriginY + ((ObjY - OriginY) * completionIndex);
             }
 
             charge--;                                  // Il a dépensé de l'énergie
@@ -62,8 +64,8 @@ namespace Drones
         // De manière graphique
         public void Render(BufferedGraphics drawingSpace)
         {
-            drawingSpace.Graphics.DrawImage(charge > 0 ? Resources.drone : Resources.boom, x-Drone.SIZE/2, y - Drone.SIZE / 2, Drone.SIZE, Drone.SIZE);
-            drawingSpace.Graphics.DrawString($"{this}", TextHelpers.drawFont, TextHelpers.writingBrush, x + 5, y - 25);
+            drawingSpace.Graphics.DrawImage(charge > 0 ? Resources.drone : Resources.boom, Convert.ToSingle(x- Drone.SIZE /2), Convert.ToSingle(y - Drone.SIZE / 2), Drone.SIZE, Drone.SIZE);
+            drawingSpace.Graphics.DrawString($"{this}", TextHelpers.drawFont, TextHelpers.writingBrush, Convert.ToSingle(x + 5), Convert.ToSingle( y - 25));
         }
 
         // De manière textuelle
