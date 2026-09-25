@@ -21,10 +21,14 @@ namespace Drones.Model
             _y = y;
         }
 
+        public float X { get => _x;}
+        public float Y { get => _y;}
+
+
         // De manière graphique
         public void Render(BufferedGraphics drawingSpace)
         {
-            drawingSpace.Graphics.DrawEllipse(droneBrush, _x, _y, 20,20);
+            drawingSpace.Graphics.DrawEllipse(droneBrush, X, _y, 20,20);
         }
     }
 }

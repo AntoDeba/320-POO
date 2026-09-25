@@ -1,4 +1,5 @@
 ﻿using Drones.Helpers;
+using Drones.Model;
 using Drones.Properties;
 
 namespace Drones
@@ -35,20 +36,38 @@ namespace Drones
 
         // Cette méthode calcule le nouvel état dans lequel le drone se trouve après
         // que 'interval' millisecondes se sont écoulées
-        public void Update(int interval)
+        public void Update(int interval,Charger charger)
         {
             if (_charge <= 0) return;                     // S'il n'a plus de charge, il ne peut plus bouger
-            if(_completionIndex >= 1) //se déclanche quand le drone est arrivé à destination
+
+            if (_charge < 800)
             {
+                _state = State.LOW_BATTERY;
+            }
+
+
+
+            if (_completionIndex >= 1) //se déclanche quand le drone est arrivé à destination
+            {
+                _completionIndex = 0;
+                _OriginX = _x;
+                _OriginY = _y;
+
+
+
                 if(_state == State.ROAMING)
                 {
-                    _completionIndex = 0;
                     _ObjX = randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH - 200);
                     _ObjY = randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT - 200);
-                    _OriginX = _x;
-                    _OriginY = _y;
-                    _distance = mathHelper.distance(_OriginX, _OriginY, _ObjX, _ObjY);
                 }
+                if(_state == State.LOW_BATTERY)
+                {
+                    _ObjX = charger.X;
+                    _ObjY = charger.Y;
+                }
+
+                
+                _distance = mathHelper.distance(_OriginX, _OriginY, _ObjX, _ObjY);
             }
             else
             {
@@ -77,7 +96,7 @@ namespace Drones
         // De manière textuelle
         public override string ToString()
         {
-            return $"{name} ({((int)((double)_charge / 1000 * 100)).ToString()}%)";
+            return $"{name} ({((int)((double)_charge / 1000 * 100)).ToString()}%) : {_state}";
         }
         #endregion
 
