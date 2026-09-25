@@ -1,3 +1,4 @@
+using Drones.Helpers;
 using Drones.Model;
 using System.Runtime.InteropServices;
 
@@ -13,6 +14,7 @@ namespace Drones
         // La flotte est l'ensemble des drones qui évoluent dans notre espace aérien
         private List<Drone> fleet;
         private Charger charger;
+        static private List<Pizzeria> pizzeriaChain = new List<Pizzeria>();
 
         BufferedGraphicsContext currentContext;
         BufferedGraphics airspace;
@@ -28,6 +30,12 @@ namespace Drones
             airspace = currentContext.Allocate(this.CreateGraphics(), this.DisplayRectangle);
             this.fleet = fleet;
             this.charger = charger;
+
+            pizzeriaChain.Add(new Pizzeria(randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH - 200), randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT - 200), "Walter"));
+            pizzeriaChain.Add(new Pizzeria(randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH - 200), randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT - 200), "Hank"));
+            pizzeriaChain.Add(new Pizzeria(randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH - 200), randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT - 200), "Jesse"));
+            pizzeriaChain.Add(new Pizzeria(randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH - 200), randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT - 200), "Alice"));
+            pizzeriaChain.Add(new Pizzeria(randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH - 200), randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT - 200), "Bob"));
         }
 
         // Affichage de la situation actuelle
@@ -35,12 +43,19 @@ namespace Drones
         {
             airspace.Graphics.Clear(Color.AliceBlue);
 
+            foreach (Pizzeria pizzeria in pizzeriaChain)
+            {
+                pizzeria.Render(airspace);
+            }
+
             // draw drones
             foreach (Drone drone in fleet)
             {
                 drone.Render(airspace);
             }
-            
+
+
+
             charger.Render(airspace);
 
             airspace.Render();
@@ -61,5 +76,6 @@ namespace Drones
             this.Update(ticker.Interval);
             this.Render();
         }
+
     }
 }
