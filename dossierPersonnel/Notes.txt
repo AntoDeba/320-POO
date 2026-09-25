@@ -7,3 +7,6 @@ ctrl + a-k-f pour mettre correctement le texte.
 Expression vs Condition
 
 Refactorisation : Modifier le code en gardant un comportement identique.
+
+
+[TestClass] et [TestMethod] sont des décorations
