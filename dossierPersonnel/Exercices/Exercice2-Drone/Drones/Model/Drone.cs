@@ -38,13 +38,24 @@ namespace Drones
         // que 'interval' millisecondes se sont écoulées
         public void Update(int interval,Charger charger)
         {
-            if (_charge <= 0) return;                     // S'il n'a plus de charge, il ne peut plus bouger
-
-            if (_charge < 800)
+            if (_charge <= 0)
             {
-                _state = State.LOW_BATTERY;
+                _state = State.CRASH;
+                return;                     // S'il n'a plus de charge, il ne peut plus bouger
             }
-
+            if (_charge < Config.LOW_BATTERY_THRESHOLD)
+            {
+                _state = State.LOW_BATTERY; //Le drone se met en batterie basse quand il n'as pas assez d'energie
+                
+                if (charger.X - _x < Config.CHARGING_DISTANCE_THRESHOLD && charger.X - _x > -Config.CHARGING_DISTANCE_THRESHOLD)
+                    _state = State.LOADING; //il se recharge quand il est assez proche de la station de recharge
+            }
+            else if (_charge >= 1000)
+            {
+                _state = State.ROAMING; //Il se remet en route quand il est chargé
+            }
+                
+            
 
 
             if (_completionIndex >= 1) //se déclanche quand le drone est arrivé à destination
@@ -57,7 +68,7 @@ namespace Drones
 
                 if(_state == State.ROAMING)
                 {
-                    _ObjX = randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH - 200);
+                    _ObjX = randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH - 200); //trouve une nouvelle destination
                     _ObjY = randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT - 200);
                 }
                 if(_state == State.LOW_BATTERY)
@@ -69,14 +80,17 @@ namespace Drones
                 
                 _distance = mathHelper.distance(_OriginX, _OriginY, _ObjX, _ObjY);
             }
-            else
+            else if(_state != State.LOADING)
             {
                 _completionIndex += Config.SPEED/_distance;
                 _x = _OriginX + ((_ObjX - _OriginX) * _completionIndex);
                 _y = _OriginY + ((_ObjY - _OriginY) * _completionIndex);
             }
 
-            _charge--;                                  // Il a dépensé de l'énergie
+            if (_state != State.LOADING)
+                _charge--;                                  // Il a dépensé de l'énergie
+            else
+                _charge += 10;
         }
 
         #endregion

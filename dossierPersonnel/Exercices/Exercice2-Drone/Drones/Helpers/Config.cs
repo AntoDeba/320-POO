@@ -12,5 +12,7 @@ namespace Drones.Helpers
         public static int AIRSPACE_WIDTH = 1200;
         public static int AIRSPACE_HEIGHT = 600;
         public static double SPEED = 10;
+        public static int LOW_BATTERY_THRESHOLD = 200;
+        public static int CHARGING_DISTANCE_THRESHOLD = 10;
     }
 }

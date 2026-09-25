@@ -21,7 +21,7 @@ namespace Drones
             fleet.Add(new Drone("Joe"));
             fleet.Add(new Drone("Joe"));
             fleet.Add(new Drone("Joe"));
-            Charger charger = new Charger(100, 100);
+            Charger charger = new Charger(Config.AIRSPACE_WIDTH / 2, Config.AIRSPACE_HEIGHT /2);
 
             // Démarrage
             Application.Run(new AirSpace(fleet, charger));
