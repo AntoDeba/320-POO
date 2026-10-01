@@ -14,7 +14,7 @@ namespace Drones
         // La flotte est l'ensemble des drones qui évoluent dans notre espace aérien
         private List<Drone> fleet;
         private Charger charger;
-        static private List<Pizzeria> pizzeriaChain = new List<Pizzeria>();
+        static private List<Pizzeria> _pizzeriaChain = new List<Pizzeria>();
 
         BufferedGraphicsContext currentContext;
         BufferedGraphics airspace;
@@ -31,11 +31,7 @@ namespace Drones
             this.fleet = fleet;
             this.charger = charger;
 
-            pizzeriaChain.Add(new Pizzeria(randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH - 200), randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT - 200), "Walter"));
-            pizzeriaChain.Add(new Pizzeria(randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH - 200), randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT - 200), "Hank"));
-            pizzeriaChain.Add(new Pizzeria(randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH - 200), randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT - 200), "Jesse"));
-            pizzeriaChain.Add(new Pizzeria(randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH - 200), randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT - 200), "Alice"));
-            pizzeriaChain.Add(new Pizzeria(randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH - 200), randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT - 200), "Bob"));
+            _pizzeriaChain = PizzeriaGenerator(5);
         }
 
         // Affichage de la situation actuelle
@@ -43,7 +39,7 @@ namespace Drones
         {
             airspace.Graphics.Clear(Color.AliceBlue);
 
-            foreach (Pizzeria pizzeria in pizzeriaChain)
+            foreach (Pizzeria pizzeria in _pizzeriaChain)
             {
                 pizzeria.Render(airspace);
             }
@@ -75,6 +71,17 @@ namespace Drones
         {
             this.Update(ticker.Interval);
             this.Render();
+        }
+
+        private List<Pizzeria> PizzeriaGenerator(int numberOfPizzerias)
+        {
+            List<Pizzeria> pizzeriaChain = new List<Pizzeria>();
+            for(int i = 0; i < numberOfPizzerias; i++)
+            {
+                pizzeriaChain.Add(new Pizzeria(randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH - 200), randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT - 200), $"Pizzeria number {i}"));
+            }
+
+            return pizzeriaChain;
         }
 
     }
