@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Drones
 {
-    public class Pizzeria
+    public class Client
     {
         private int _x;                                 // Position en X depuis la gauche de l'espace aérien
         private int _y;                                 // Position en Y depuis le haut de l'espace aérien
         private string _nom;
 
-        private const int dimension = 50;
+        private const int dimension = 10;
 
-        private SolidBrush _pizzeriaBrush = new SolidBrush(Color.Gray);
-        public Pizzeria(int x, int y, string nom)
+        private SolidBrush _clientBrush = new SolidBrush(Color.Green);
+        public Client(int x, int y, string nom)
         {
             _x = x;
             _y = y;
@@ -23,8 +23,7 @@ namespace Drones
         }
         public void Render(BufferedGraphics drawingSpace)
         {
-            drawingSpace.Graphics.FillRectangle(_pizzeriaBrush, _x - (dimension/2), _y - (dimension / 2), dimension, dimension);
+            drawingSpace.Graphics.FillRectangle(_clientBrush, _x - (dimension / 2), _y - (dimension / 2), dimension, dimension);
         }
-
     }
 }

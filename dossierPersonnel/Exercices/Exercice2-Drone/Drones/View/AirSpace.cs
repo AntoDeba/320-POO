@@ -15,6 +15,7 @@ namespace Drones
         private List<Drone> fleet;
         private Charger charger;
         static private List<Pizzeria> _pizzeriaChain = new List<Pizzeria>();
+        static private List<Client> _allClients = new List<Client>();
 
         BufferedGraphicsContext currentContext;
         BufferedGraphics airspace;
@@ -32,6 +33,7 @@ namespace Drones
             this.charger = charger;
 
             _pizzeriaChain = PizzeriaGenerator(5);
+            _allClients = ClientGenerator(20);
         }
 
         // Affichage de la situation actuelle
@@ -48,6 +50,11 @@ namespace Drones
             foreach (Drone drone in fleet)
             {
                 drone.Render(airspace);
+            }
+
+            foreach (Client client in _allClients)
+            {
+                client.Render(airspace);
             }
 
 
@@ -78,10 +85,21 @@ namespace Drones
             List<Pizzeria> pizzeriaChain = new List<Pizzeria>();
             for(int i = 0; i < numberOfPizzerias; i++)
             {
-                pizzeriaChain.Add(new Pizzeria(randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH - 200), randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT - 200), $"Pizzeria number {i}"));
+                pizzeriaChain.Add(new Pizzeria(randomValuesHelper.Alea.Next(0, Config.AIRSPACE_WIDTH), randomValuesHelper.Alea.Next(0,Config.AIRSPACE_HEIGHT), $"Pizzeria number {i}"));
             }
 
             return pizzeriaChain;
+        }
+
+        private List<Client> ClientGenerator(int numberOfClient)
+        {
+            List<Client> clientChain = new List<Client>();
+            for (int i = 0; i < numberOfClient; i++)
+            {
+                clientChain.Add(new Client(randomValuesHelper.Alea.Next(0, Config.AIRSPACE_WIDTH), randomValuesHelper.Alea.Next(0, Config.AIRSPACE_HEIGHT), $"Client number {i}"));
+            }
+
+            return clientChain;
         }
 
     }
