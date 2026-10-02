@@ -22,13 +22,13 @@ namespace Drones
 
         public Pizzeria(int x, int y, string nom)
         {
-            _x = x - (dimension / 2);
-            _y = y - (dimension / 2);
+            _x = x ;
+            _y = y ;
             _nom = nom;
         }
         public void Render(BufferedGraphics drawingSpace)
         {
-            drawingSpace.Graphics.FillRectangle(_pizzeriaBrush, _x , _y, dimension, dimension);
+            drawingSpace.Graphics.FillRectangle(_pizzeriaBrush, _x - (dimension / 2), _y - (dimension / 2), dimension, dimension);
         }
 
     }

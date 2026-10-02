@@ -21,6 +21,7 @@ namespace Drones
         BufferedGraphics airspace;
 
         private const int numberOfPizzerias = 5;
+        private const int numberOfClients = 20;
 
         // Initialisation de l'espace aérien avec un certain nombre de drones
         public AirSpace(List<Drone> fleet, Charger charger)
@@ -38,11 +39,19 @@ namespace Drones
             {
                 try
                 {
-                    _pizzeriaChain = RegisterPizzeria(_pizzeriaChain, new Pizzeria(randomValuesHelper.Alea.Next(0, Config.AIRSPACE_WIDTH), randomValuesHelper.Alea.Next(0, Config.AIRSPACE_HEIGHT), $"Pizzeria number {_pizzeriaChain.Count + 1}"));
+                    _pizzeriaChain = RegisterPizzeria(_pizzeriaChain, new Pizzeria(randomValuesHelper.Alea.Next(Pizzeria.dimension, Config.AIRSPACE_WIDTH - Pizzeria.dimension), randomValuesHelper.Alea.Next(Pizzeria.dimension, Config.AIRSPACE_HEIGHT- Pizzeria.dimension), $"Pizzeria number {_pizzeriaChain.Count + 1}"));
                 }
-                catch{}
+                catch{ }
             }
-            _allClients = ClientGenerator(20);
+
+            while (_allClients.Count < numberOfClients)
+            {
+                try
+                {
+                    _allClients = RegisterClient(_pizzeriaChain,_allClients, new Client(randomValuesHelper.Alea.Next(Client.dimension, Config.AIRSPACE_WIDTH- Client.dimension), randomValuesHelper.Alea.Next(Client.dimension, Config.AIRSPACE_HEIGHT - Client.dimension), $"Client number {_allClients.Count + 1}"));
+                }
+                catch { }
+            }
         }
 
         // Affichage de la situation actuelle
@@ -97,7 +106,6 @@ namespace Drones
             {
                 if(Math.Abs(newPizzeria.X - pizzeria.X) < Pizzeria.dimension && Math.Abs(newPizzeria.Y - pizzeria.Y) < Pizzeria.dimension)
                 {
-                    Console.WriteLine("collision");
                     throw new Exception("Collision !");
                 }
             }
@@ -106,15 +114,26 @@ namespace Drones
             return pizzeriaChain;
         }
 
-        private List<Client> ClientGenerator(int numberOfClient)
+        static private List<Client> RegisterClient(List<Pizzeria> pizzeriaChain, List<Client> allClients, Client newClient)
         {
-            List<Client> clientChain = new List<Client>();
-            for (int i = 0; i < numberOfClient; i++)
+            foreach (Client client in allClients)
             {
-                clientChain.Add(new Client(randomValuesHelper.Alea.Next(0, Config.AIRSPACE_WIDTH), randomValuesHelper.Alea.Next(0, Config.AIRSPACE_HEIGHT), $"Client number {i}"));
+                if (Math.Abs(newClient.X - client.X) < Client.dimension + Client.minDistanceBetweenClients && Math.Abs(newClient.Y - client.Y) < Client.dimension + Client.minDistanceBetweenClients)
+                {
+                    throw new Exception("Collision !");
+                }
+            }
+            
+            foreach (Pizzeria pizzeria in pizzeriaChain)
+            {
+                if (Math.Abs(newClient.X - pizzeria.X) < Pizzeria.dimension && Math.Abs(newClient.Y - pizzeria.Y) < Pizzeria.dimension)
+                {
+                    throw new Exception("Collision !");
+                }
             }
 
-            return clientChain;
+            allClients.Add(newClient);
+            return allClients;
         }
 
     }

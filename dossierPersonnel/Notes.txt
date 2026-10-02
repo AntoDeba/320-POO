@@ -10,3 +10,5 @@ Refactorisation : Modifier le code en gardant un comportement identique.
 
 
 [TestClass] et [TestMethod] sont des décorations
+
+Type CAST-> veut dire "forcer le type" ex : (Wind.Direction)RandomHelper.Next(4); ou maInt = (int)maDouble;

@@ -12,9 +12,14 @@ namespace Drones
         private int _y;                                 // Position en Y depuis le haut de l'espace aérien
         private string _nom;
 
-        private const int dimension = 10;
+        public const int dimension = 10;
+        public const int minDistanceBetweenClients = 50;
 
         private SolidBrush _clientBrush = new SolidBrush(Color.Green);
+
+        public int X { get => _x;}
+        public int Y { get => _y;}
+
         public Client(int x, int y, string nom)
         {
             _x = x;
