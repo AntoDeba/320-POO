@@ -1,5 +1,6 @@
 using Drones.Helpers;
 using Drones.Model;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -42,7 +43,7 @@ namespace Drones
             {
                 try
                 {
-                    _pizzeriaChain = RegisterPizzeria(charger,_pizzeriaChain, new Pizzeria(randomValuesHelper.Alea.Next(Pizzeria.dimension, Config.AIRSPACE_WIDTH - Pizzeria.dimension), randomValuesHelper.Alea.Next(Pizzeria.dimension, Config.AIRSPACE_HEIGHT- Pizzeria.dimension), $"Pizzeria number {_pizzeriaChain.Count + 1}"));
+                    _pizzeriaChain = RegisterPizzeria(_allClients,charger,_pizzeriaChain, new Pizzeria(randomValuesHelper.Alea.Next(Pizzeria.dimension, Config.AIRSPACE_WIDTH - Pizzeria.dimension), randomValuesHelper.Alea.Next(Pizzeria.dimension, Config.AIRSPACE_HEIGHT- Pizzeria.dimension), $"Pizzeria number {_pizzeriaChain.Count + 1}"));
                 }
                 catch{ }
             }
@@ -103,8 +104,15 @@ namespace Drones
             this.Render();
         }
 
-        static private List<Pizzeria> RegisterPizzeria(Charger charger, List<Pizzeria> pizzeriaChain, Pizzeria newPizzeria)
+        static public List<Pizzeria> RegisterPizzeria(List<Client> allClients, Charger charger, List<Pizzeria> pizzeriaChain, Pizzeria newPizzeria)
         {
+            foreach (Client client in allClients)
+            {
+                if (Math.Abs(newPizzeria.X - client.X) < Pizzeria.dimension + Client.minDistanceBetweenClients && Math.Abs(newPizzeria.Y - client.Y) < Pizzeria.dimension + Client.minDistanceBetweenClients)
+                {
+                    throw new Exception("Collision !");
+                }
+            }
             foreach (Pizzeria pizzeria in pizzeriaChain)
             {
                 if(Math.Abs(newPizzeria.X - pizzeria.X) < Pizzeria.dimension && Math.Abs(newPizzeria.Y - pizzeria.Y) < Pizzeria.dimension)
@@ -121,7 +129,7 @@ namespace Drones
             return pizzeriaChain;
         }
 
-        static private List<Client> RegisterClient(Charger charger,List<Pizzeria> pizzeriaChain, List<Client> allClients, Client newClient)
+        static public List<Client> RegisterClient(Charger charger,List<Pizzeria> pizzeriaChain, List<Client> allClients, Client newClient)
         {
             foreach (Client client in allClients)
             {

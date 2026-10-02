@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Drones.Helpers
+namespace Drones
 {
-    internal static class mathHelper
+    public static class mathHelper
     {
         public static double distance(double X1, double Y1, double X2, double Y2)
         {
