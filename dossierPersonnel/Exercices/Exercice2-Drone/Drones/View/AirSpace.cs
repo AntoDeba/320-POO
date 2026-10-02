@@ -20,6 +20,8 @@ namespace Drones
         BufferedGraphicsContext currentContext;
         BufferedGraphics airspace;
 
+        private const int numberOfPizzerias = 5;
+
         // Initialisation de l'espace aérien avec un certain nombre de drones
         public AirSpace(List<Drone> fleet, Charger charger)
         {
@@ -32,7 +34,14 @@ namespace Drones
             this.fleet = fleet;
             this.charger = charger;
 
-            _pizzeriaChain = PizzeriaGenerator(5);
+            while(_pizzeriaChain.Count < numberOfPizzerias)
+            {
+                try
+                {
+                    _pizzeriaChain = RegisterPizzeria(_pizzeriaChain, new Pizzeria(randomValuesHelper.Alea.Next(0, Config.AIRSPACE_WIDTH), randomValuesHelper.Alea.Next(0, Config.AIRSPACE_HEIGHT), $"Pizzeria number {_pizzeriaChain.Count + 1}"));
+                }
+                catch{}
+            }
             _allClients = ClientGenerator(20);
         }
 
@@ -46,16 +55,18 @@ namespace Drones
                 pizzeria.Render(airspace);
             }
 
+            foreach (Client client in _allClients)
+            {
+                client.Render(airspace);
+            }
+
             // draw drones
             foreach (Drone drone in fleet)
             {
                 drone.Render(airspace);
             }
 
-            foreach (Client client in _allClients)
-            {
-                client.Render(airspace);
-            }
+
 
 
 
@@ -80,14 +91,18 @@ namespace Drones
             this.Render();
         }
 
-        private List<Pizzeria> PizzeriaGenerator(int numberOfPizzerias)
+        static private List<Pizzeria> RegisterPizzeria(List<Pizzeria> pizzeriaChain, Pizzeria newPizzeria)
         {
-            List<Pizzeria> pizzeriaChain = new List<Pizzeria>();
-            for(int i = 0; i < numberOfPizzerias; i++)
+            foreach (Pizzeria pizzeria in pizzeriaChain)
             {
-                pizzeriaChain.Add(new Pizzeria(randomValuesHelper.Alea.Next(0, Config.AIRSPACE_WIDTH), randomValuesHelper.Alea.Next(0,Config.AIRSPACE_HEIGHT), $"Pizzeria number {i}"));
+                if(Math.Abs(newPizzeria.X - pizzeria.X) < Pizzeria.dimension && Math.Abs(newPizzeria.Y - pizzeria.Y) < Pizzeria.dimension)
+                {
+                    Console.WriteLine("collision");
+                    throw new Exception("Collision !");
+                }
             }
-
+            
+            pizzeriaChain.Add(newPizzeria);
             return pizzeriaChain;
         }
 
