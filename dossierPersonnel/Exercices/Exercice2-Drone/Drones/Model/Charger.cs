@@ -12,6 +12,7 @@ namespace Drones.Model
     {
         private float _x ;                                 // Position en X depuis la gauche de l'espace aérien
         private float _y ;                                 // Position en Y depuis le haut de l'espace aérien
+        private const int SIZE = 20;
 
         private Pen droneBrush = new Pen(new SolidBrush(Color.Purple), 3);
 
@@ -28,7 +29,7 @@ namespace Drones.Model
         // De manière graphique
         public void Render(BufferedGraphics drawingSpace)
         {
-            drawingSpace.Graphics.DrawEllipse(droneBrush, X, _y, 20,20);
+            drawingSpace.Graphics.DrawEllipse(droneBrush, _x - (SIZE/2), _y - (SIZE / 2), SIZE, SIZE);
         }
     }
 }

@@ -1,5 +1,6 @@
 using Drones.Helpers;
 using Drones.Model;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Drones
@@ -20,8 +21,10 @@ namespace Drones
         BufferedGraphicsContext currentContext;
         BufferedGraphics airspace;
 
-        private const int numberOfPizzerias = 5;
-        private const int numberOfClients = 20;
+        private const int numberOfPizzerias = 10;
+        private const int numberOfClients = 30;
+
+        public Charger Charger { get => charger;}
 
         // Initialisation de l'espace aérien avec un certain nombre de drones
         public AirSpace(List<Drone> fleet, Charger charger)
@@ -39,7 +42,7 @@ namespace Drones
             {
                 try
                 {
-                    _pizzeriaChain = RegisterPizzeria(_pizzeriaChain, new Pizzeria(randomValuesHelper.Alea.Next(Pizzeria.dimension, Config.AIRSPACE_WIDTH - Pizzeria.dimension), randomValuesHelper.Alea.Next(Pizzeria.dimension, Config.AIRSPACE_HEIGHT- Pizzeria.dimension), $"Pizzeria number {_pizzeriaChain.Count + 1}"));
+                    _pizzeriaChain = RegisterPizzeria(charger,_pizzeriaChain, new Pizzeria(randomValuesHelper.Alea.Next(Pizzeria.dimension, Config.AIRSPACE_WIDTH - Pizzeria.dimension), randomValuesHelper.Alea.Next(Pizzeria.dimension, Config.AIRSPACE_HEIGHT- Pizzeria.dimension), $"Pizzeria number {_pizzeriaChain.Count + 1}"));
                 }
                 catch{ }
             }
@@ -48,7 +51,7 @@ namespace Drones
             {
                 try
                 {
-                    _allClients = RegisterClient(_pizzeriaChain,_allClients, new Client(randomValuesHelper.Alea.Next(Client.dimension, Config.AIRSPACE_WIDTH- Client.dimension), randomValuesHelper.Alea.Next(Client.dimension, Config.AIRSPACE_HEIGHT - Client.dimension), $"Client number {_allClients.Count + 1}"));
+                    _allClients = RegisterClient(charger,_pizzeriaChain, _allClients, new Client(randomValuesHelper.Alea.Next(Client.dimension, Config.AIRSPACE_WIDTH- Client.dimension), randomValuesHelper.Alea.Next(Client.dimension, Config.AIRSPACE_HEIGHT - Client.dimension), $"Client number {_allClients.Count + 1}"));
                 }
                 catch { }
             }
@@ -100,7 +103,7 @@ namespace Drones
             this.Render();
         }
 
-        static private List<Pizzeria> RegisterPizzeria(List<Pizzeria> pizzeriaChain, Pizzeria newPizzeria)
+        static private List<Pizzeria> RegisterPizzeria(Charger charger, List<Pizzeria> pizzeriaChain, Pizzeria newPizzeria)
         {
             foreach (Pizzeria pizzeria in pizzeriaChain)
             {
@@ -109,12 +112,16 @@ namespace Drones
                     throw new Exception("Collision !");
                 }
             }
+            if(Math.Abs(newPizzeria.X - charger.X) < Pizzeria.dimension && Math.Abs(newPizzeria.Y - charger.Y) < Pizzeria.dimension)
+            {
+                throw new Exception("Collision !");
+            }
             
             pizzeriaChain.Add(newPizzeria);
             return pizzeriaChain;
         }
 
-        static private List<Client> RegisterClient(List<Pizzeria> pizzeriaChain, List<Client> allClients, Client newClient)
+        static private List<Client> RegisterClient(Charger charger,List<Pizzeria> pizzeriaChain, List<Client> allClients, Client newClient)
         {
             foreach (Client client in allClients)
             {
@@ -130,6 +137,11 @@ namespace Drones
                 {
                     throw new Exception("Collision !");
                 }
+            }
+
+            if (Math.Abs(newClient.X - charger.X) < Client.dimension && Math.Abs(newClient.Y - charger.Y) < Client.dimension)
+            {
+                throw new Exception("Collision !");
             }
 
             allClients.Add(newClient);

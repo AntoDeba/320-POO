@@ -68,8 +68,8 @@ namespace Drones
 
                 if(_state == State.ROAMING)
                 {
-                    _ObjX = randomValuesHelper.Alea.Next(200, Config.AIRSPACE_WIDTH - 200); //trouve une nouvelle destination
-                    _ObjY = randomValuesHelper.Alea.Next(200, Config.AIRSPACE_HEIGHT - 200);
+                    _ObjX = randomValuesHelper.Alea.Next(Drone.SIZE, Config.AIRSPACE_WIDTH - Drone.SIZE); //trouve une nouvelle destination
+                    _ObjY = randomValuesHelper.Alea.Next(Drone.SIZE, Config.AIRSPACE_HEIGHT - Drone.SIZE);
                 }
                 if(_state == State.LOW_BATTERY)
                 {
@@ -103,7 +103,7 @@ namespace Drones
         // De manière graphique
         public void Render(BufferedGraphics drawingSpace)
         {
-            drawingSpace.Graphics.DrawImage(_charge > 0 ? Resources.drone : Resources.boom, Convert.ToSingle(_x- Drone.SIZE /2), Convert.ToSingle(_y - Drone.SIZE / 2), Drone.SIZE, Drone.SIZE);
+            drawingSpace.Graphics.DrawImage(_charge > 0 ? Resources.drone : Resources.boom, Convert.ToSingle(_x- (Drone.SIZE /2)), Convert.ToSingle(_y - (Drone.SIZE / 2)), Drone.SIZE, Drone.SIZE);
             drawingSpace.Graphics.DrawString($"{this}", TextHelpers.drawFont, TextHelpers.writingBrush, Convert.ToSingle(_x + 5), Convert.ToSingle( _y - 25));
         }
 
